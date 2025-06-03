@@ -1,0 +1,7 @@
+streamlit==1.32.2
+pandas==2.2.1
+numpy==1.26.4
+ccxt==4.2.15
+plotly==5.19.0
+scikit-learn==1.4.1.post1
+statsmodels==0.14.1 

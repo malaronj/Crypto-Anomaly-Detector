@@ -1,50 +1,110 @@
-# Welcome to your Expo app 👋
+# Crypto Anomaly Detector
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A real-time cryptocurrency price tracking application with advanced anomaly detection capabilities.
 
-## Get started
+## Features
 
-1. Install dependencies
+- Real-time cryptocurrency price tracking
+- Multiple anomaly detection methods:
+  - Z-Score Analysis (±3σ threshold)
+  - Moving Average Deviation (±2σ deviation)
+  - Rate of Change Detection (5% threshold)
+- Interactive method selection
+- Visual anomaly highlighting
+- Detailed price statistics (24h volume, market cap)
+- Support for multiple cryptocurrencies
+- CAD currency display
 
-   ```bash
-   npm install
-   ```
+## Setup
 
-2. Start the app
+### Backend (Python FastAPI)
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+1. Navigate to the backend directory:
 ```bash
-npm run reset-project
+cd backend
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-## Learn more
+3. Start the backend server:
+```bash
+uvicorn app:app --reload
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### Frontend (React Native)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+1. Install dependencies:
+```bash
+npm install
+```
 
-## Join the community
+2. Start the development server:
+```bash
+npm start
+```
 
-Join our community of developers creating universal apps.
+## Anomaly Detection Methods
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 1. Z-Score Method
+- Uses standard deviation from the mean to detect outliers
+- Points beyond ±3 standard deviations are flagged as anomalies
+- Best for normally distributed price movements
+
+### 2. Moving Average Deviation
+- Compares current price to moving average
+- Flags points that deviate significantly from the trend
+- Good for detecting sudden price movements
+
+### 3. Rate of Change
+- Monitors percentage change between consecutive points
+- Identifies rapid price changes
+- Effective for detecting sudden spikes or drops
+
+## Environment Variables
+
+Create a `.env` file in the root directory with:
+
+```
+COINMARKETCAP_API_KEY=your_api_key_here
+```
+
+## API Endpoints
+
+### POST /detect-anomalies
+Detects price anomalies using specified method.
+
+Request body:
+```json
+{
+  "prices": [
+    {
+      "timestamp": "2023-11-20T12:00:00Z",
+      "price": 50000.00
+    }
+  ],
+  "method": "zscore",
+  "window_size": 20
+}
+```
+
+Response:
+```json
+{
+  "timestamps": ["2023-11-20T12:00:00Z"],
+  "prices": [50000.00],
+  "is_anomaly": [false],
+  "threshold_values": [3.0],
+  "method": "zscore"
+}
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
