@@ -49,27 +49,26 @@ npm start
 ## Anomaly Detection Methods
 
 ### 1. Z-Score Method
-- Uses standard deviation from the mean to detect outliers
-- Points beyond ±3 standard deviations are flagged as anomalies
-- Best for normally distributed price movements
+- Uses standard deviation from the mean to detect outliers.
+- Employs an **adaptive threshold** (typically between 2.5 and 4.0 standard deviations, adjusted based on price volatility) rather than a fixed value.
+- Incorporates **exponential weighting** in calculations to give more relevance to recent data points.
+- Best for normally distributed price movements but adapts to local volatility.
 
 ### 2. Moving Average Deviation
-- Compares current price to moving average
-- Flags points that deviate significantly from the trend
-- Good for detecting sudden price movements
+- Compares current price to an **Exponential Moving Average (EMA)** for more responsive trend tracking.
+- Uses **Bollinger Bands** (typically ±2 standard deviations from EMA, but configurable) to identify significant deviations.
+- Combines Bollinger Band breakouts with **Relative Strength Index (RSI)** (anomalies flagged if RSI is >70 or <30 during a breakout) for improved signal accuracy.
+- Good for detecting sudden price movements relative to the recent trend and momentum.
 
 ### 3. Rate of Change
-- Monitors percentage change between consecutive points
-- Identifies rapid price changes
-- Effective for detecting sudden spikes or drops
+- Monitors percentage change between data points.
+- Uses an **adaptive threshold** (base default is 5%, adjusted by local price volatility).
+- Analyzes **multiple Rate of Change (ROC) timeframes** (short, medium, long) and incorporates a **MACD-like indicator** to confirm momentum.
+- Effective for detecting sudden spikes or drops confirmed by momentum indicators.
 
 ## Environment Variables
 
-Create a `.env` file in the root directory with:
-
-```
-COINMARKETCAP_API_KEY=your_api_key_here
-```
+*(Note: The backend API currently does not require any environment variables to run. The `COINMARKETCAP_API_KEY` mentioned previously might be used by the frontend or for planned features related to fetching market data, but is not used by the anomaly detection endpoints.)*
 
 ## API Endpoints
 
@@ -96,8 +95,17 @@ Response:
   "timestamps": ["2023-11-20T12:00:00Z"],
   "prices": [50000.00],
   "is_anomaly": [false],
-  "threshold_values": [3.0],
-  "method": "zscore"
+  "threshold_values": [3.2], /* Example: adaptive z-score threshold or EMA value */
+  "method": "zscore",
+  "stats": { /* Dictionary containing additional statistics from the analysis */
+    "mean": 49500.00,
+    "std": 500.00,
+    "max_zscore": 1.5,
+    "adaptive_threshold": 3.2,
+    "volatility": 0.015,
+    "window_size": 20
+    /* Other stats may be present depending on the method */
+  }
 }
 ```
 
